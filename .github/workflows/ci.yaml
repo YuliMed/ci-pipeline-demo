@@ -24,7 +24,11 @@ jobs:
           pip install pytest  # For tests
 
       - name: Run tests
-        run: pytest  # Discovers tests/ automatically. Fails build on error.
+        run: |
+          export PYTHONPATH=$PYTHONPATH:.
+          pytest 
+
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
