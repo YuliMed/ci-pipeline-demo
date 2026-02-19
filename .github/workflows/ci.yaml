@@ -36,9 +36,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+
+
+      - name: Set image tag
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "IMAGE_TAG=prod-${GITHUB_SHA}" >> $GITHUB_ENV
+          elif [ "${{ github.ref_name }}" = "dev" ]; then
+            echo "IMAGE_TAG=dev-${GITHUB_SHA}" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
+          fi
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .  # Build from root
           push: true  # Actually push to registry
-          tags: ${{ secrets.DOCKER_USERNAME }}/ci-pipeline-demo:${{ github.sha }}  # SHA tag—key
+          tags: ${{ secrets.DOCKER_USERNAME }}/ci-pipeline-demo:${{ env.IMAGE_TAG }}
