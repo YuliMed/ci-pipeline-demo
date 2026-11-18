@@ -1,6 +1,5 @@
 # CI Pipeline Demo
 
-## Assignment Answers
 
 ### 1. Why should `kubectl apply` not be used in CI?
 `kubectl apply` is imperative and non-declarative—it's like "push this now" vs. "this is the desired state." In CI:
