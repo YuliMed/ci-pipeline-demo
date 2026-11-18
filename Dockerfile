@@ -1,18 +1,19 @@
-FROM python:3.9-slim
+FROM python:3.12-slim
 
-# Set working dir and env
 WORKDIR /app
-ENV PYTHONUNBUFFERED=1
 
-# Install deps first
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app code
-COPY . .
+RUN pip install --no-cache-dir -r requirements.txt \
+    && useradd --create-home --uid 10001 appuser
 
-# Expose port
+COPY --chown=appuser:appuser app.py .
+
+USER appuser
+
 EXPOSE 5000
 
-# Run the app
 CMD ["python", "app.py"]
